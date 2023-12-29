@@ -1,0 +1,10 @@
+uvicorn
+fastapi
+transformers
+sentencepiece
+opencv-python
+datasets
+'git+https://github.com/facebookresearch/detectron2.git'
+easyocr
+numpy
+torch
