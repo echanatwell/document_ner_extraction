@@ -1,0 +1,24 @@
+{% extends base.html %}
+
+{% block title %}
+    <title>Doc NER extraction</title>
+{% endblock %}
+{% block content %}
+    <div class="container pt-5">
+        <div class="row justify-content-md-center">
+            <span class="text-center">Вставьте ниже изображение документа</span>
+        </div>
+        <div class="row justify-content-md-center mt-3">
+            <div class="w-100">
+                <form class="row p-3 border border-success rounded w-100" method="post" enctype="multipart/form-data">
+                    <div class="col-7">
+                        <input class="form-control" type="file" id="document-input" name="doc-file">
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-success">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
