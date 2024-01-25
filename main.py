@@ -1,10 +1,14 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request, Form
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
 import uvicorn
-from typing import Dict
+from typing import Dict, Union
 
 from transformers import AutoModelForTokenClassification, LayoutXLMTokenizerFast, LayoutLMv2FeatureExtractor
 import numpy as np
 import base64
+import io
+from PIL import Image
 import cv2
 import torch
 from collections import defaultdict
@@ -15,11 +19,13 @@ from torchvision import transforms
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory='templates')
+
 model = AutoModelForTokenClassification.from_pretrained("./layoutxlm-finetuned-doc")
 tokenizer = LayoutXLMTokenizerFast.from_pretrained("./layoutxlm-base")
 feature_extractor = LayoutLMv2FeatureExtractor(ocr_lang="rus") # DEPRECATED => LayoutLMv2ImageProcessor
 reader = easyocr.Reader(['ru'])
-
+    
 def unnormalize_box(bbox, width, height):
      return [
          width * (bbox[0] / 1000),
@@ -59,14 +65,48 @@ def get_clusters(img):
         clusters.append((x, y, x+w, y+h))
 
     return clusters
-    
+
+def img2b64(img):
+    """Converts image to base64 encoded string
+    Args:
+        img: numpy.ndarray
+    Returns:
+        base64 encoded string
+    """
+    buffer = io.BytesIO()
+
+    if isinstance(img, np.ndarray):
+        if len(img.shape) == 2 or img.shape[2] == 1:
+            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+
+        img = Image.fromarray(img)
+    elif isinstance(img, Image.Image):
+        pass
+
+    img.save(buffer, 'PNG')
+    buffer.seek(0)
+
+    return base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+@app.get('/api/doc', response_class=HTMLResponse)
+def get_main(request: Request):
+    return templates.TemplateResponse(name='main.html', context={'request': request})
+
 @app.post("/api/doc/get-doc-info")
-def extract_context(data: Dict[str, str]):
+async def extract_context(request: Request):
     # decode image
     print('Start')
-    img = cv2.cvtColor(cv2.imdecode(np.frombuffer(base64.b64decode(data['img']), dtype=np.uint8),
-                                    cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB) # convert from bytes string to img
+    # img = cv2.cvtColor(cv2.imdecode(np.frombuffer(base64.b64decode(data['img']), dtype=np.uint8),
+    #                                 cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB) # convert from bytes string to img
+    
+    form_data = await request.form()
+    img_data = form_data['doc-file']
+    img_bytes = await img_data.read()
+    arr = np.frombuffer(img_bytes, dtype=np.uint8)
+    img = cv2.cvtColor(cv2.imdecode(arr, cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+    
     print('Image decoded')
+    
     # preprocess image
     height, width, _ = img.shape
     inputs_words, inputs_boxes = text_recognition(img, reader)
@@ -80,6 +120,7 @@ def extract_context(data: Dict[str, str]):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print('Preprocessed')
     model.to(device)
+    
     # split long text
     input_len = encoding.input_ids.shape[1]
 
@@ -96,6 +137,7 @@ def extract_context(data: Dict[str, str]):
     img_tensor = transform(img)
     normalized_image_tensor = torch.unsqueeze(img_tensor, 0)
     print('Splitted')
+    
     # get predictions
     with torch.no_grad():
         outputs = model(input_ids=encoding.input_ids.to(device),
@@ -144,8 +186,8 @@ def extract_context(data: Dict[str, str]):
     
 
     # ners_dict['JT'] = sorted(ners_dict['JT'], key=lambda x: x[2])
-    
-    return {
+    return templates.TemplateResponse(name='report.html', context={
+            'request': request,
             'senderOrganization': ners_dict['ORG'][0] if ners_dict['ORG'] else 'UNK',
             'senderNumber': ners_dict['MN'][1] if ners_dict['MN'] else 'UNK',
             'senderDate': ners_dict['DR'][0] if ners_dict['DR'] else 'UNK',
@@ -156,7 +198,8 @@ def extract_context(data: Dict[str, str]):
             'executorName': ners_dict['EXR'][0] if ners_dict['EXR'] else 'UNK',
             'executorPhone': ' '.join(ners_dict['PHN']) if ners_dict['PHN'] else 'UNK', 
             'executorEmail': ners_dict['MAIL'][0] if ners_dict['MAIL'] else 'UNK',
-           }
+            'image': img2b64(img)
+           })
 
 
 if __name__ == '__main__':
