@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Doc NER extraction</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <div class="row">
+            <h3>Результаты распознавания</h3>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderOrganization</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderOrganization</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderNumber</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderNumber</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderDate</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderDate</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">addresseeName</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">addresseeName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">addresseeJobTitle</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">addresseeJobTitle</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderName</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderJobTitle</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">senderJobTitle</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorName</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorPhone</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorPhone</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorEmail</p>
+                        </div>
+                        <div class="col-6">
+                            <p style="line-height: 1.1; word-wrap: break-word;">executorEmail</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="border border-success rounded p-3">
+                    <img src="data:image/jpeg;base64, {{ image }}" class="w-100">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
