@@ -88,7 +88,7 @@ def img2b64(img):
 
     return base64.b64encode(buffer.getvalue()).decode('utf-8')
 
-@app.get('/api/doc', response_class=HTMLResponse)
+@app.get('/api/doc/get-doc-info', response_class=HTMLResponse)
 def get_main(request: Request):
     return templates.TemplateResponse(name='main.html', context={'request': request})
 
@@ -182,8 +182,14 @@ async def extract_context(request: Request):
     if len(entity) > 0:
         only_ent = [ent for ent in entity if ent[1] != 'O']
         ners_dict[only_ent[0][1][2:]].append(' '.join([e[0] for e in only_ent]))
-
     
+    img_ = img.copy()
+    for (box, pred) in [(box, pred) for (box, pred) in preds_boxes[1:] if pred != 'O']:
+        start = (int(box[0]), int(box[1]))
+        end = (int(box[2]), int(box[3]))
+        cv2.rectangle(img_, start, end, (255, 0, 0), 1)
+        cv2.putText(img_, pred, start, cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+
 
     # ners_dict['JT'] = sorted(ners_dict['JT'], key=lambda x: x[2])
     return templates.TemplateResponse(name='report.html', context={
@@ -198,7 +204,7 @@ async def extract_context(request: Request):
             'executorName': ners_dict['EXR'][0] if ners_dict['EXR'] else 'UNK',
             'executorPhone': ' '.join(ners_dict['PHN']) if ners_dict['PHN'] else 'UNK', 
             'executorEmail': ners_dict['MAIL'][0] if ners_dict['MAIL'] else 'UNK',
-            'image': img2b64(img)
+            'image': img2b64(img_)
            })
 
 

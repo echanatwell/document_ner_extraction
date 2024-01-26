@@ -1,4 +1,5 @@
 uvicorn
+python-multipart
 fastapi
 torch
 torchvision
