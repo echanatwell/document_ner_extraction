@@ -11,91 +11,71 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Организация</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ senderOrganization }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Номер письма</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ senderNumber }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Дата отправки</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ senderDate }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Адресат</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ addresseeName }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Должность адресата</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ addresseeJobTitle }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Отправитель</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ senderName }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Должность отправителя</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ senderJobTitle }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Исполнитель</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ executorName }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 1.1; word-wrap: break-word;">Телефон исполнителя</p>
-                        </div>
-                        <div class="col-6">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ executorPhone }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                         <div class="col-6">
-                            <p style="line-height: 0.1; word-wrap: break-word;">Email исполнителя</p>
-                        </div>
-                        <div class="col-7">
-				<p style="line-height: 1.1; word-wrap: break-word;">{{ executorEmail }}</p>
-                        </div>
-                    </div>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Тип сущности</th>
+                            <th scope="col">Значение</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Организация</th>
+                            <td>{{ senderOrganization }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Номер письма</th>
+                            <td>{{ senderNumber }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Дата отправки</th>
+                            <td>{{ senderDate }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Адресат</th>
+                            <td>{{ addresseeName }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Должность адресата</th>
+                            <td>{{ addresseeJobTitle }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Отправитель</th>
+                            <td>{{ senderName }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Должность отправителя</th>
+                            <td>{{ senderJobTitle }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Исполнитель</th>
+                            <td>{{ executorName }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Телефон исполнителя</th>
+                            <td>{{ executorPhone }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email исполнителя</th>
+                            <td>{{ executorEmail }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Адрес</th>
+                            <td>{{ location }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">ИНН</th>
+                            <td>{{ inn }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">КПП</th>
+                            <td>{{ kpp }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-6">
-                <div class="border border-success rounded p-3">
+                <div class="border border-success rounded p-3 m-1">
                     <img src="data:image/jpeg;base64, {{ image }}" class="w-100">
                 </div>
             </div>

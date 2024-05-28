@@ -21,8 +21,8 @@ app = FastAPI()
 
 templates = Jinja2Templates(directory='templates')
 
-model = AutoModelForTokenClassification.from_pretrained("./layoutxlm-finetuned-doc")
-tokenizer = LayoutXLMTokenizerFast.from_pretrained("./layoutxlm-base")
+model = AutoModelForTokenClassification.from_pretrained('./layoutxlm_ner_extractor') # ("./layoutxlm-finetuned-doc")
+tokenizer = LayoutXLMTokenizerFast.from_pretrained('./layoutxlm_ner_extractor') # ("./layoutxlm-base")
 feature_extractor = LayoutLMv2FeatureExtractor(ocr_lang="rus") # DEPRECATED => LayoutLMv2ImageProcessor
 reader = easyocr.Reader(['ru'])
     
@@ -188,22 +188,25 @@ async def extract_context(request: Request):
         start = (int(box[0]), int(box[1]))
         end = (int(box[2]), int(box[3]))
         cv2.rectangle(img_, start, end, (255, 0, 0), 1)
-        cv2.putText(img_, pred, start, cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 2, cv2.LINE_AA)
+        cv2.putText(img_, pred, start, cv2.FONT_HERSHEY_COMPLEX, 1.2, (0, 0, 255), 1, cv2.LINE_AA)
 
 
     # ners_dict['JT'] = sorted(ners_dict['JT'], key=lambda x: x[2])
     return templates.TemplateResponse(name='report.html', context={
             'request': request,
-            'senderOrganization': ners_dict['ORG'][0] if ners_dict['ORG'] else 'UNK',
-            'senderNumber': ners_dict['MN'][1] if ners_dict['MN'] else 'UNK',
-            'senderDate': ners_dict['DR'][0] if ners_dict['DR'] else 'UNK',
-            'addresseeName': ners_dict['ADR'][0] if ners_dict['ADR'] else 'UNK',
-            'addresseeJobTitle': ners_dict['JT'][0] if ners_dict['JT'] else 'UNK',
-            'senderName': ners_dict['SND'][0] if ners_dict['SND'] else 'UNK',
-            'senderJobTitle': ners_dict['JT'][-1] if ners_dict['JT'] else 'UNK',
-            'executorName': ners_dict['EXR'][0] if ners_dict['EXR'] else 'UNK',
-            'executorPhone': ' '.join(ners_dict['PHN']) if ners_dict['PHN'] else 'UNK', 
-            'executorEmail': ners_dict['MAIL'][0] if ners_dict['MAIL'] else 'UNK',
+            'senderOrganization': str(ners_dict['ORG']) if ners_dict['ORG'] else 'Не найдено',
+            'senderNumber': str(ners_dict['MN']) if ners_dict['MN'] else 'Не найдено',
+            'senderDate': str(ners_dict['DS'][0]) if ners_dict['DS'] else 'Не найдено',
+            'addresseeName': str(ners_dict['ADR']) if ners_dict['ADR'] else 'Не найдено',
+            'addresseeJobTitle': str(ners_dict['JT'][:3]) if ners_dict['JT'] else 'Не найдено',
+            'senderName': str(ners_dict['SND']) if ners_dict['SND'] else 'Не найдено',
+            'senderJobTitle': str(ners_dict['JT'][-3:]) if ners_dict['JT'] else 'Не найдено',
+            'executorName': str(ners_dict['EXR']) if ners_dict['EXR'] else 'Не найдено',
+            'executorPhone': str(ners_dict['PHN']) if ners_dict['PHN'] else 'Не найдено', 
+            'executorEmail': str(ners_dict['MAIL']) if ners_dict['MAIL'] else 'Не найдено',
+            'location': str(ners_dict['LOC']) if ners_dict['LOC'] else 'Не найдено',
+            'inn': str(ners_dict['INN']) if ners_dict['INN'] else 'Не найдено',
+            'kpp': str(ners_dict['KPP']) if ners_dict['KPP'] else 'Не найдено',
             'image': img2b64(img_)
            })
 
